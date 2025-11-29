@@ -9,14 +9,10 @@ version '1.0.0'
 files {
     "html/*.*",
     "html/audio.mp3",
-    "html/audio.ogg",
     "html/background.mp4",
-    "html/background.webm",
-    "html/background.ogv",
     "html/index.html",
     "html/config.js",
-    "html/logo.png",
-    "html/Logo.png"
+    "html/logo.png"
 }
 
 loadscreen_cursor("yes")
