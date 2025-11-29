@@ -33,7 +33,7 @@ A modern, customizable loading screen for FiveM servers featuring dynamic staff 
 Add this line to your `server.cfg`:
 
 ```cfg
-ensure lxfs-loadingscreen
+ensure futr-loading
 ```
 
 Or if you renamed the folder:
@@ -49,7 +49,7 @@ Make sure this line is placed **before** any other resources that might affect t
 Restart your FiveM server or use the command:
 
 ```
-restart lxfs-loadingscreen
+restart futr-loading
 ```
 
 ## Configuration
