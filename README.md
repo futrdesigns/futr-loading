@@ -21,25 +21,7 @@ A modern, customizable loading screen for FiveM servers featuring dynamic staff 
 1. Download the loading screen files
 2. Extract the folder to your FiveM server's `resources` directory and place it where you like e.g. [standalone]
 
-### Step 2: File Structure
-
-Your resource folder should look like this:
-
-```
-lxfs-loadingscreen/
-├── fxmanifest.lua
-└── html/
-    ├── index.html
-    ├── config.js
-    ├── Logo.png          (your logo goes here)
-    ├── background.mp4    (optional - your background video)
-    ├── background.webm   (optional - fallback format)
-    ├── background.ogv    (optional - fallback format)
-    ├── audio.mp3         (optional - your background music)
-    └── audio.ogg         (optional - fallback format)
-```
-
-### Step 3: Add Your Logo
+### Step 2: Add Your Logo
 
 1. Prepare your logo image (PNG format recommended)
 2. Name it `Logo.png` (case-sensitive)
