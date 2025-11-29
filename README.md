@@ -1,4 +1,4 @@
-# LXFS Loading Screen
+# futr Loading Screen
 
 A modern, customizable loading screen for FiveM servers featuring dynamic staff lists, particle effects, background video/audio support, and real-time game loading progress tracking.
 
@@ -19,8 +19,7 @@ A modern, customizable loading screen for FiveM servers featuring dynamic staff 
 ### Step 1: Download and Extract
 
 1. Download the loading screen files
-2. Extract the folder to your FiveM server's `resources` directory
-3. Rename the folder to something like `lxfs-loadingscreen` or your preferred name
+2. Extract the folder to your FiveM server's `resources` directory and place it where you like e.g. [standalone]
 
 ### Step 2: File Structure
 
