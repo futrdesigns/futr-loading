@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading Screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --accent-color: #f020e6;
+    --accent-hover: #bd17cc;
+    --bg-dark: rgba(0,0,0,0.7);
+    --bg-card: rgba(40,44,52,0.85);
+    --bg-hover: rgba(60,64,72,0.95);
+    --text-light: #ffffff;
+    --text-muted: #b0b0b0;
+    --gradient-start: #1a1a1a;
+    --gradient-end: #2a2a3a;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    user-select: none; 
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to top right, var(--gradient-start), rgba(164, 32, 240, 0.2));
+    overflow: hidden;
+    color: var(--text-light);
+}
+
+/* Video Background */
+#video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    opacity: 0.5;
+}
+
+#video-fallback {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #1a1a1a, #2a2a3a);
+    z-index: -2;
+}
+
+/* Particle Canvas */
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Main Container */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: calc(100% - 60px);
+    padding: 40px;
+}
+
+/* Staff Section */
+.staff-section {
+    max-width: 320px;
+    width: 100%;
+}
+
+.staff-header {
+    margin-bottom: 16px;
+}
+
+.staff-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+}
+
+.staff-subtitle {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.staff-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.staff-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.staff-list::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+}
+
+.staff-list::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 10px;
+}
+
+.staff-member {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-card);
+    border-radius: 6px;
+    padding: 6px 8px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    position: relative;
+}
+
+.staff-member::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent-color), var(--accent-hover));
+    border-radius: 6px 0 0 6px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.staff-member:hover {
+    background: var(--bg-hover);
+    transform: translateX(4px);
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 15px rgba(240, 32, 230, 0.2);
+}
+
+.staff-member:hover::before {
+    opacity: 1;
+}
+
+.staff-avatar-container {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.staff-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(240, 32, 230, 0.3);
+}
+
+.staff-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.staff-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 8px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover), var(--accent-color));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+}
+
+.staff-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.staff-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 2px;
+}
+
+.staff-role {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Center Content */
+.center-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.logo-container {
+    position: relative;
+}
+
+.logo-img {
+    width: 240px;
+    height: auto;
+    opacity: 0;
+    transform: scale(0.9);
+    animation: logoReveal 1.2s ease-out forwards;
+    filter: drop-shadow(0 10px 40px rgba(240, 32, 230, 0.4));
+}
+
+.logo-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+    opacity: 0.3;
+    animation: pulse 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Music Controls */
+.music-controls {
+    position: fixed;
+    bottom: 40px;
+    left: 25px;
+    background: var(--bg-dark);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+.music-controls:hover {
+    background: rgba(0,0,0,0.85);
+}
+
+.music-controls button {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--text-light);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.music-controls button:hover {
+    background: var(--accent-color);
+    transform: scale(1.1);
+}
+
+.music-controls button:active {
+    transform: scale(0.95);
+}
+
+#volume-slider {
+    -webkit-appearance: none;
+    width: 100px;
+    height: 5px;
+    background: var(--accent-color);
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+#volume-slider:active {
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--text-light);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid var(--accent-color);
+    transition: all 0.2s ease-in-out;
+}
+
+#volume-slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 6px var(--accent-color);
+}
+
+#volume-slider::-webkit-slider-thumb:active {
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+#volume-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: var(--text-light);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid var(--accent-color);
+    transition: all 0.2s ease-in-out;
+}
+
+#volume-slider::-moz-range-thumb:hover {
+    box-shadow: 0 0 6px var(--accent-color);
+}
+
+#volume-slider::-moz-range-thumb:active {
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+#volume-percentage {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-left: 6px;
+    opacity: 1;
+    transition: opacity 0.4s ease-in-out, color 0.4s ease-in-out;
+    min-width: 40px;
+}
+
+#volume-percentage.fade {
+    opacity: 0.3;
+    color: var(--accent-color);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 32px;
+    height: 32px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top: 2px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Loading Bar */
+.loading-bar-container {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    text-align: center;
+}
+
+.loading-bar-wrapper {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.loading-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 20px;
+    box-shadow: 0 0 20px var(--accent-color);
+    position: relative;
+}
+
+.loading-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Animations */
+@keyframes logoReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .staff-section {
+        max-width: 280px;
+    }
+    
+    .staff-avatar-container {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .loading-bar-container {
+        width: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .staff-section {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .staff-list {
+        max-height: 40vh;
+    }
+    
+    .logo-img {
+        width: 180px;
+    }
+    
+    .music-controls {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 20px;
+    }
+    
+    .loading-spinner {
+        bottom: 90px;
+        right: 20px;
+    }
+    
+    .loading-bar-container {
+        width: 90%;
+        bottom: 130px;
+    }
+}
+</style>
+</head>
+<body>
+
+<video id="video-background" autoplay loop muted playsinline preload="auto">
+    <source src="background.mp4" type="video/mp4">
+    <source src="background.webm" type="video/webm">
+    <source src="background.ogv" type="video/ogg">
+    Your browser does not support the video tag.
+</video>
+
+<div id="video-fallback"></div>
+
+<canvas id="particles"></canvas>
+
+<div class="container">
+    <div class="staff-section">
+        <div class="staff-header">
+            <h2>Staff Team</h2>
+            <div class="staff-subtitle" id="staff-count">Total: 0</div>
+        </div>
+        <div class="staff-list" id="staff-container"></div>
+    </div>
+
+    <div class="center-content">
+        <div class="logo-container">
+            <div class="logo-glow"></div>
+            <img src="Logo.png" alt="Server Logo" class="logo-img">
+        </div>
+    </div>
+</div>
+
+<div class="loading-bar-container">
+    <div class="loading-bar-wrapper">
+        <div class="loading-bar" id="loading-bar"></div>
+    </div>
+</div>
+
+<div class="music-controls">
+    <button id="play-pause" title="Play/Pause">▶</button>
+    <button id="mute-toggle" title="Mute/Unmute">🔊</button>
+    <input type="range" id="volume-slider" min="0" max="100" value="100">
+    <span id="volume-percentage">100%</span>
+</div>
+
+<div class="loading-spinner"></div>
+
+<audio id="background-music" loop preload="auto">
+    <source src="audio.mp3" type="audio/mpeg">
+    <source src="audio.ogg" type="audio/ogg">
+    Your browser does not support the audio element.
+</audio>
+
+<script src="config.js"></script>
+<script>
+// Apply configuration colors
+const root = document.documentElement;
+if (CONFIG.colors) {
+    root.style.setProperty('--accent-color', CONFIG.colors.accentColor);
+    root.style.setProperty('--accent-hover', CONFIG.colors.accentHover);
+    root.style.setProperty('--bg-dark', CONFIG.colors.backgroundDark);
+    root.style.setProperty('--bg-card', CONFIG.colors.backgroundCard);
+    root.style.setProperty('--bg-hover', CONFIG.colors.backgroundHover);
+    root.style.setProperty('--text-light', CONFIG.colors.textLight);
+    root.style.setProperty('--text-muted', CONFIG.colors.textMuted);
+    root.style.setProperty('--gradient-start', CONFIG.colors.gradientStart);
+    root.style.setProperty('--gradient-end', CONFIG.colors.gradientEnd);
+}
+
+// Initialize Staff List
+const staffContainer = document.getElementById('staff-container');
+const staffCount = document.getElementById('staff-count');
+
+if (CONFIG.staff && CONFIG.staff.enabled) {
+    staffContainer.innerHTML = CONFIG.staff.members.map(member => {
+        const avatarContent = member.image 
+            ? `<img src="${member.image}" alt="${member.name}">` 
+            : member.name.charAt(0).toUpperCase();
+        
+        return `
+            <div class="staff-member">
+                <div class="staff-avatar-container">
+                    <div class="staff-avatar">${avatarContent}</div>
+                </div>
+                <div class="staff-info">
+                    <div class="staff-name">${member.name}</div>
+                    <div class="staff-role">${member.role}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    staffCount.textContent = `Total: ${CONFIG.staff.members.length}`;
+} else {
+    document.querySelector('.staff-section').style.display = 'none';
+}
+
+// Video Background Handling
+const video = document.getElementById('video-background');
+const videoFallback = document.getElementById('video-fallback');
+
+console.log('Video element:', video);
+console.log('Video src:', video.querySelector('source')?.src);
+
+fetch('background.mp4', { method: 'HEAD' })
+    .then(response => {
+        console.log('Video file check:', response.status === 200 ? 'EXISTS' : 'NOT FOUND');
+        if (response.status !== 200) {
+            console.warn('background.mp4 not found - showing fallback');
+            showVideoFallback();
+        }
+    })
+    .catch(err => {
+        console.warn('Could not check video file:', err);
+        showVideoFallback();
+    });
+
+function showVideoFallback() {
+    video.style.display = 'none';
+    videoFallback.style.display = 'block';
+}
+
+video.addEventListener('loadstart', () => {
+    console.log('Video loading started');
+});
+
+video.addEventListener('canplay', () => {
+    console.log('Video can start playing');
+});
+
+video.addEventListener('loadeddata', () => {
+    console.log('Video data loaded successfully');
+});
+
+video.addEventListener('play', () => {
+    console.log('Video started playing');
+});
+
+video.addEventListener('error', (e) => {
+    console.error('Video error:', e);
+    console.error('Video error details:', video.error);
+    showVideoFallback();
+});
+
+video.addEventListener('stalled', () => {
+    console.warn('Video stalled');
+});
+
+video.addEventListener('suspend', () => {
+    console.warn('Video suspended');
+});
+
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        if (video.paused) {
+            console.log('Attempting to play video...');
+            video.play().catch(err => {
+                console.warn('Could not autoplay video:', err);
+            });
+        }
+    }, 1000);
+});
+
+// Audio Controls
+const audio = document.getElementById('background-music');
+const playBtn = document.getElementById('play-pause');
+const muteBtn = document.getElementById('mute-toggle');
+const volumeSlider = document.getElementById('volume-slider');
+const volumePercentage = document.getElementById('volume-percentage');
+
+let isPlaying = false;
+let userInteracted = false;
+let audioInitialized = false;
+
+function initializeAudio() {
+    if (audioInitialized) return;
+    
+    audio.volume = CONFIG.media.audio.defaultVolume / 100;
+    volumeSlider.value = CONFIG.media.audio.defaultVolume;
+    volumePercentage.textContent = `${CONFIG.media.audio.defaultVolume}%`;
+    audioInitialized = true;
+
+    audio.addEventListener('play', () => {
+        isPlaying = true;
+        playBtn.textContent = '⏸';
+    });
+    
+    audio.addEventListener('pause', () => {
+        isPlaying = false;
+        playBtn.textContent = '▶';
+    });
+    
+    audio.addEventListener('ended', () => {
+        if (isPlaying) {
+            audio.currentTime = 0;
+            audio.play().catch(console.warn);
+        }
+    });
+    
+    audio.addEventListener('error', (e) => {
+        console.warn('Audio error:', e);
+        isPlaying = false;
+        playBtn.textContent = '▶';
+    });
+}
+
+window.addEventListener('load', () => {
+    initializeAudio();
+
+    if (CONFIG.media.audio.autoplay) {
+        audio.muted = true;
+        audio.play().then(() => {
+            setTimeout(() => {
+                audio.muted = false;
+                isPlaying = true;
+                playBtn.textContent = '⏸';
+            }, 100);
+        }).catch(() => {
+            console.log("Autoplay blocked. Waiting for user interaction...");
+            isPlaying = false;
+            playBtn.textContent = '▶';
+        });
+    }
+});
+
+function startAudioOnInteraction() {
+    if (!userInteracted && !isPlaying) {
+        userInteracted = true;
+        initializeAudio();
+        
+        audio.muted = false;
+        audio.play().then(() => {
+            isPlaying = true;
+            playBtn.textContent = '⏸';
+        }).catch(console.warn);
+    }
+}
+
+document.addEventListener('click', startAudioOnInteraction, { once: true });
+document.addEventListener('keydown', startAudioOnInteraction, { once: true });
+document.addEventListener('touchstart', startAudioOnInteraction, { once: true });
+
+playBtn.addEventListener('click', () => {
+    initializeAudio();
+    
+    if (isPlaying || !audio.paused) {
+        audio.pause();
+        isPlaying = false;
+        playBtn.textContent = '▶';
+    } else {
+        audio.play().then(() => {
+            isPlaying = true;
+            playBtn.textContent = '⏸';
+            userInteracted = true;
+        }).catch(console.warn);
+    }
+});
+
+muteBtn.addEventListener('click', () => {
+    initializeAudio();
+    audio.muted = !audio.muted;
+    muteBtn.textContent = audio.muted ? '🔇' : '🔊';
+});
+
+volumeSlider.addEventListener('input', () => {
+    initializeAudio();
+    const vol = volumeSlider.value / 100;
+    audio.volume = vol;
+    volumePercentage.textContent = `${volumeSlider.value}%`;
+
+    volumePercentage.classList.add('fade');
+    clearTimeout(volumePercentage.fadeTimeout);
+    volumePercentage.fadeTimeout = setTimeout(() => {
+        volumePercentage.classList.remove('fade');
+    }, 400);
+});
+
+let audioCheckInterval = setInterval(() => {
+    if (!audioInitialized || !userInteracted) return;
+
+    if (isPlaying && audio.paused && !audio.ended) {
+        console.log('Audio unexpectedly paused, attempting to restart...');
+        audio.play().catch((error) => {
+            console.warn('Failed to restart audio:', error);
+            isPlaying = false;
+            playBtn.textContent = '▶';
+        });
+    }
+}, 5000);
+
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        clearInterval(audioCheckInterval);
+    } else {
+        audioCheckInterval = setInterval(() => {
+            if (!audioInitialized || !userInteracted) return;
+            
+            if (isPlaying && audio.paused && !audio.ended) {
+                console.log('Audio unexpectedly paused, attempting to restart...');
+                audio.play().catch((error) => {
+                    console.warn('Failed to restart audio:', error);
+                    isPlaying = false;
+                    playBtn.textContent = '▶';
+                });
+            }
+        }, 5000);
+    }
+});
+
+// Particle System
+if (CONFIG.particles.enabled) {
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const particles = Array.from({ length: CONFIG.particles.count }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * (CONFIG.particles.sizeMax - CONFIG.particles.sizeMin) + CONFIG.particles.sizeMin,
+        dx: (Math.random() - 0.5) * CONFIG.particles.speed,
+        dy: (Math.random() - 0.5) * CONFIG.particles.speed,
+        color: CONFIG.particles.colors[Math.floor(Math.random() * CONFIG.particles.colors.length)]
+    }));
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+            
+            p.x += p.dx;
+            p.y += p.dy;
+
+            if (p.x < 0 || p.x > canvas.width) {
+                p.dx *= -1;
+                p.x = Math.max(0, Math.min(canvas.width, p.x));
+            }
+            if (p.y < 0 || p.y > canvas.height) {
+                p.dy *= -1;
+                p.y = Math.max(0, Math.min(canvas.height, p.y));
+            }
+        });
+        requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+} else {
+    document.getElementById('particles').style.display = 'none';
+}
+
+// FiveM Loading Bar Integration
+const loadingBar = document.getElementById('loading-bar');
+
+let gameLoadingCount = 0;
+let gameLoadingTotal = 100;
+let currentLoadingPhase = 0; // 0: init, 1: data files, 2: map loading
+
+// FiveM event handlers
+const handlers = {
+    startInitFunctionOrder: function(data) {
+        currentLoadingPhase = 0;
+        gameLoadingCount = 0;
+        gameLoadingTotal = data.count || 100;
+        updateLoadingBar(0);
+    },
+
+    initFunctionInvoking: function(data) {
+        if (currentLoadingPhase === 0) {
+            gameLoadingCount++;
+            // Phase 1: 0-30% of loading bar
+            const progress = (gameLoadingCount / gameLoadingTotal) * 30;
+            updateLoadingBar(progress);
+        }
+    },
+
+    startDataFileEntries: function(data) {
+        currentLoadingPhase = 1;
+        gameLoadingCount = 0;
+        gameLoadingTotal = data.count || 100;
+        updateLoadingBar(30);
+    },
+
+    performMapLoadFunction: function(data) {
+        currentLoadingPhase = 2;
+        gameLoadingCount++;
+        gameLoadingTotal = Math.max(gameLoadingTotal, data.idx || gameLoadingCount);
+        // Phase 2: 30-100% of loading bar
+        const progress = 30 + ((gameLoadingCount / gameLoadingTotal) * 70);
+        updateLoadingBar(progress);
+    },
+
+    onLogLine: function(data) {
+        // Optional: handle specific log lines
+    }
+};
+
+function updateLoadingBar(percent) {
+    percent = Math.max(0, Math.min(100, percent));
+    loadingBar.style.width = `${percent}%`;
+}
+
+// Listen for FiveM events
+window.addEventListener('message', function(e) {
+    if (e.data && e.data.eventName && handlers[e.data.eventName]) {
+        handlers[e.data.eventName](e.data);
+    }
+});
+
+// Only use fallback simulation if no FiveM events are received
+let receivedFiveM = false;
+let simulatedProgress = 0;
+let simulationInterval = null;
+
+// Start simulation after a delay if no FiveM events
+setTimeout(() => {
+    if (!receivedFiveM) {
+        simulationInterval = setInterval(() => {
+            if (simulatedProgress < 95) {
+                simulatedProgress += Math.random() * 1.5;
+                updateLoadingBar(simulatedProgress);
+            } else {
+                clearInterval(simulationInterval);
+            }
+        }, 200);
+    }
+}, 1000);
+
+// Stop simulation when real FiveM event is received
+window.addEventListener('message', function(e) {
+    if (e.data && e.data.eventName) {
+        receivedFiveM = true;
+        if (simulationInterval) {
+            clearInterval(simulationInterval);
+        }
+    }
+}, { once: true });
+</script>
+
+</body>
+</html>
