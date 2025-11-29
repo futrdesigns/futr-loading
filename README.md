@@ -24,7 +24,7 @@ A modern, customizable loading screen for FiveM servers featuring dynamic staff 
 ### Step 2: Add Your Logo
 
 1. Prepare your logo image (PNG format recommended)
-2. Name it `Logo.png` (case-sensitive)
+2. Name it `logo.png` (case-sensitive)
 3. Place it in the `html/` folder
 4. Recommended size: 240px width or larger for best quality
 
