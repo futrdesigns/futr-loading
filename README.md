@@ -2,6 +2,10 @@
 
 A modern, customizable loading screen for FiveM servers featuring dynamic staff lists, particle effects, background video/audio support, and real-time game loading progress tracking.
 
+# Credits
+
+All credits go to https://forum.cfx.re/t/free-opensource-lxfs-loadingscreen/5342897/6 as this is what the loadingscreen is as a base, the bare bones like the centred logo originate form lxfs code so big thanks to him
+
 ## Features
 
 - Modern glassmorphism design with smooth animations
